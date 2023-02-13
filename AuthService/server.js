@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 let mongoose = require('mongoose');
-var app = require('./config/app');
+var app = require('./src/config/app');
 var debug = require('debug')('authservice:server');
 var http = require('http');
 
@@ -9,7 +9,7 @@ app.set('port', port);
 
 //Database Intialization
 mongoose.set('strictQuery', false);
-let db = require('./config/db');
+let db = require('./src/config/db');
 db();
 
 
