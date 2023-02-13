@@ -3,10 +3,30 @@ version: '3.4'
 services:
   authservice:
     image: authservice
+    restart: always
     build:
-      context: AuthService
+      context: .
       dockerfile: ./Dockerfile
     environment:
       NODE_ENV: production
+      SECRETKEY: t7w!z%C*F-JaNdRgUjXn2r5u8x/A?D(GYq3t6w9z$C&F)J@NcRfUjWnZr4u7x!A%gVkYp3s6v9y$B&E)H@McQfTjWmZq4t7wPdSgUkXp2s5v8y/B?E(H+MbQeThWmYq3-JaNdRfUjXn2r5u8x/A?D(G+KbPeShVk
+      MONGO_URL: mongodb://admin:admin@mongodbProd:27017/
     ports:
       - 3001:3001
+  mongodbProd:
+    image: mongo
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: admin
+  mongo-expressProd:
+    image: mongo-express
+    restart: always
+    ports: 
+      - 3003:8081
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: admin
+      ME_CONFIG_MONGODB_ADMINPASSWORD: admin
+      ME_CONFIG_MONGODB_SERVER: mongodbProd
+      ME_CONFIG_MONGODB_ENABLE_ADMIN: true
+
