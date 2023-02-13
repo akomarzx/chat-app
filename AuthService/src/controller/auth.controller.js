@@ -50,7 +50,7 @@ let logIn = async (req, res, next) => {
                         // Generating the JWT token.
                         const payload =
                         {
-                            _id: user._id,
+                            subject: user._id,
                         };
                         const token = jwt.sign(
                             {
@@ -108,8 +108,39 @@ let register = async (req, res, next) => {
     });
 };
 
+let authenticate = async (req, res, next) => {
+    passport.authenticate(
+        'tokencheck',
+        async (err, user, info) => {
+            try {
+                if (err || !user) {
+                    return res.status(401).json(
+                        {
+                            isAuthenticated: false,
+                            message: err || info.message
+                        }
+                    );
+                }
+                return res.status(200).json(
+                    {
+                        isAuthenticated: true
+                    }
+                )
+            } catch (error) {
+
+                console.log(error);
+                return res.status(401).json(
+                    {
+                        isAuthenticated: false,
+                        message: getErrorMessage(error)
+                    });
+            }
+        }
+    )(req, res, next);
+}
 
 module.exports = {
     signIn: logIn,
-    signUp: register
+    signUp: register,
+    authenticate
 }
