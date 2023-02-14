@@ -46,12 +46,13 @@ let logIn = async (req, res, next) => {
                         if (error) {
                             return next(error);
                         }
-
                         // Generating the JWT token.
                         const payload =
                         {
                             subject: user._id,
+                            username: user.username
                         };
+                        console.log(payload)
                         const token = jwt.sign(
                             {
                                 payload: payload
@@ -139,8 +140,15 @@ let authenticate = async (req, res, next) => {
     )(req, res, next);
 }
 
+let getUser = async (req, res, next) => {
+    return res.status(200).json({
+        user: req.payload.username
+    });
+}
+
 module.exports = {
     signIn: logIn,
     signUp: register,
-    authenticate
+    authenticate,
+    getUser
 }
