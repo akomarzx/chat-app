@@ -1,0 +1,33 @@
+<div class="row">
+    <div class="col-md-10">
+        <h1>{{(isLogInMode) ? 'Log-In' : 'Register'}}</h1>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-6">
+        <form 
+        [formGroup]="credentialsForm"
+        (ngSubmit)="onSubmit()"
+        >
+            <div class="mb-2">
+                <label for="username" class="form-label">Username</label>
+                <input type="text" class="form-control" id="username" placeholder="Username" formControlName="username">
+            </div>
+            <div class="mb-2">
+                <label for="password" class="form-label">Password</label>
+                <input class="form-control" id="password" type="password" placeholder="Password" formControlName="password">
+            </div>
+            <div class="row mb-2">
+                <div class="col-md-12">
+                    <small>{{(isLogInMode) ? 'Not Registered?' : 'Already Registered?'}}
+                        <button type="reset" class="btn btn-primary btn-sm" (click)="changeMode()">Click Here</button>
+                    </small>
+                </div>
+            </div>
+            <div>
+                <button class="btn btn-primary">{{isLogInMode ? 'Log-in' : 'Register'}}</button>
+            </div>
+        </form>
+
+    </div>
+</div>
