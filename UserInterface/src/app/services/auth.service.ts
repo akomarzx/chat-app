@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { LogInSignUpRequestDTO } from '../interfaces/LogInSignUpRequestDTO';
 import { LogInResponseDTO } from '../interfaces/LogInResponseDTO';
 import { SignUpResponseDTO } from '../interfaces/SignUpResponseDTO';
@@ -11,8 +11,8 @@ import { GetUserResponseDTO } from '../interfaces/GetUserResponseDTO';
 })
 export class AuthService {
 
-  constructor(private http : HttpClient) { 
-    this.isPending = false;
+  constructor(private http : HttpClient) {
+    this.isPending = new BehaviorSubject<boolean>(false);
     this.isLogin = false;
   }
 
@@ -30,6 +30,6 @@ export class AuthService {
 
   token: string | undefined;
   currentUser: string | undefined;
-  isPending: boolean;
+  isPending: BehaviorSubject<boolean>;
   isLogin : boolean;
 }
