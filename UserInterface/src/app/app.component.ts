@@ -9,16 +9,16 @@ import { SocketService } from './services/socket.service';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent implements OnDestroy, OnInit{
-  
+export class AppComponent implements OnDestroy, OnInit {
+
   errorSubscription!: Subscription;
   shouldDisplay: boolean;
-  
+
   onErrorDismissed() {
     this.appState.hasError.next(false);
   }
 
-  constructor(private appState : AppStateService, private socket : SocketService) {
+  constructor(private appState: AppStateService, private socket: SocketService, public auth: AuthService) {
     this.shouldDisplay = false;
   }
   ngOnInit(): void {

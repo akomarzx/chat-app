@@ -30,10 +30,14 @@ module.exports.onConnection = () => {
         }
         socket.emit('users', users);
 
-        socket.broadcast.emit('new user', ({ username: socket.username, userId: socket.id }));
+        socket.broadcast.emit('new user', ({ username: socket.username,userId: socket.id }));
 
         socket.on('disconnect', () => {
             socketServer.emit('user disconnected', socket.id);
+        })
+
+        socket.on('sent message', (data) => {
+            socket.to(data.id).emit('recieve message', {message : data.message, username: data.username})
         })
     })
 

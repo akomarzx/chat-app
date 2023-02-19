@@ -1,0 +1,30 @@
+<div class="row">
+  <div class="row">
+    <h2>{{otherUsername}}</h2>
+  </div>
+  <div class="row">
+    <div class="col-md-8 border border-primary overflow-auto mainChatArea">
+      <div class="row h-65 border border-primary p-2">
+        <div class="h-5 d-flex flex-column">
+          <ng-container *ngFor="let message of messages$ | async">
+            <div class="d-flex">
+              <span>{{message.username}}: {{message.message}}</span>
+            </div>
+          </ng-container>
+        </div>
+      </div>
+      <div class="row h-35 border border-primary p-1 justify-content-center">
+        <form [formGroup]="messageForm" (ngSubmit)="onSendMessage()">
+          <div class="row h-70">
+            <textarea class="form-control" rows="2" formControlName="messageBox"></textarea>
+          </div>
+          <div class="row h-30 justify-content-end mt-1">
+            <div class="col-md-6 d-flex justify-content-end h-75 pe-0">
+              <button class="btn btn-primary">Send</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
