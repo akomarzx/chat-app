@@ -5,36 +5,40 @@
  */
 
 var app = require('./src/config/app');
-var debug = require('debug')('messageservices:server');
+var debug = require('debug')('messagepersistentservice:server');
 var http = require('http');
-let socket = require('./src/config/socket');
-let rabbitmq = require('./src/config/rabbitmq.js');
+const db = require('./src/config/db');
+const rabbiConfig = require('./src/config/rabbitmq');
 /**
  * Get port from environment and store in Express.
  */
 
-var port = normalizePort(process.env.PORT || '5001');
+var port = normalizePort(process.env.PORT || '6001');
 app.set('port', port);
 
 /**
  * Create HTTP server.
  */
 
+// Mongo-db
+try {
+  db();
+} catch (error) {
+  console.log(error.stack);
+}
+
+try {
+  rabbiConfig.connect();
+} catch (error) {
+  console.log(error.stack)
+}
+
 var server = http.createServer(app);
 
 /**
  * Listen on provided port, on all network interfaces.
  */
-//
-socket.setUp(server);
-socket.onConnection();
 
-try {
-  rabbitmq.rabbit.connect();
-} catch (error) {
-  console.log(error.stack);
-}
-//
 server.listen(port);
 server.on('error', onError);
 server.on('listening', onListening);
