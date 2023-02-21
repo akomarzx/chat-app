@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
 
@@ -12,5 +12,10 @@ export class ChatServiceService {
 
   baseUrl = 'http://localhost:6001';
 
-
+  getAllMessages(userOne: string, userTwo: string) {
+    let httpParams = new HttpParams();
+    httpParams = httpParams.append('firstUser', userOne);
+    httpParams = httpParams.append('secondUser', userTwo);
+    return this.http.get(this.baseUrl + '/messages', { params: httpParams });
+  }
 }

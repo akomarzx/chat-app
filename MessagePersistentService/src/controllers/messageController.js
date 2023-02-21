@@ -9,24 +9,46 @@ let persistMessage = async (message) => {
         message: messageJson.message
     };
 
-    let messageTemp = new messages(newMessage);
-
-    console.log(messageTemp);
-
-    try {
-        await messageTemp.save();
-    } catch (error) {
-        console.log(error.stack)
-    }
+    let conversation = await messages.findOneAndUpdate({
+        parties: {
+            $all: [newMessage.sender, newMessage.recepient]
+        }
+    }, {
+        $push: {
+            messages: {
+                sender: newMessage.sender,
+                message: newMessage.message
+            }
+        }
+    });
+    console.log(conversation);
 }
 
 let getAllMessagesForConv = async (req, res, next) => {
     let firstUser = req.query.firstUser;
     let secondUser = req.query.secondUser;
 
-    console.log(firstUser, secondUser);
+    let conversation = await messages.findOne({
+        parties: {
+            $all: [firstUser, secondUser]
+        }
+    });
 
-    res.send('hello');
+
+    if (!conversation) {
+        let newArray = [];
+        let newConverstation = new messages({
+            parties: [
+                firstUser,
+                secondUser
+            ],
+            messages: newArray
+        })
+        await newConverstation.save();
+    }
+    res.status(200).json(
+        { messages: conversation.messages }
+    );
 }
 
 module.exports = {

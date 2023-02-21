@@ -2,6 +2,7 @@ import { AfterViewInit, Component, Input, OnInit, ViewChild } from '@angular/cor
 import { FormBuilder, Validators } from '@angular/forms';
 import { BehaviorSubject } from 'rxjs';
 import { AuthService } from 'src/app/services/auth.service';
+import { ChatServiceService } from 'src/app/services/chat-service.service';
 import { SocketService } from 'src/app/services/socket.service';
 
 @Component({
@@ -15,9 +16,9 @@ export class ChatModalComponent implements OnInit, AfterViewInit {
   @Input() otherUserId!: string
 
 
-  messages$: BehaviorSubject<{ message: string | null | undefined, username: string | undefined | null }[]>;
-  constructor(private socketService: SocketService, private fb: FormBuilder, private auth: AuthService) {
-    this.messages$ = new BehaviorSubject<{ message: string | null | undefined, username: string | null | undefined }[]>([]);
+  messages$: BehaviorSubject<{ message: string | null | undefined, sender: string | undefined | null }[]>;
+  constructor(private socketService: SocketService, private fb: FormBuilder, private auth: AuthService, private chatService: ChatServiceService) {
+    this.messages$ = new BehaviorSubject<{ message: string | null | undefined, sender: string | null | undefined }[]>([]);
   }
 
   ngAfterViewInit(): void {
@@ -26,12 +27,23 @@ export class ChatModalComponent implements OnInit, AfterViewInit {
   ngOnInit(): void {
     this.socketService.socket.on('recieve message', (data) => {
       this.messages$.next([...this.messages$.getValue(), data])
-      console.log('Received a message');
     })
+    this.chatService.getAllMessages(this.auth.currentUser!, this.otherUsername).subscribe(
+      {
+        next: (data: any) => {
+          if (!data.messages) {
+            this.messages$.next([]);
+            return;
+          }
+          this.messages$.next(data.messages);
+        }
+      }
+    )
   }
 
   onSendMessage() {
-    this.messages$.next([...this.messages$.getValue(), { message: this.messageForm.get('messageBox')?.value, username: this.auth.currentUser }])
+    console.log(this.messages$.getValue());
+    this.messages$.next([...this.messages$.getValue(), { message: this.messageForm.get('messageBox')?.value, sender: this.auth.currentUser }])
     this.socketService.socket.emit('sent message', {
       id: this.otherUserId,
       message: this.messageForm.get('messageBox')?.value,

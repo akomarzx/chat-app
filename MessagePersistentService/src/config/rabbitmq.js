@@ -19,7 +19,7 @@ module.exports.connect = async () => {
 
     channel.consume(queue, async (message) => {
         await messageController.persistMessage(message);
-        // channel.ack(message);
+        channel.ack(message);
     }, {
         noAck: false
     })
