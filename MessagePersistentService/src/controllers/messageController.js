@@ -21,7 +21,6 @@ let persistMessage = async (message) => {
             }
         }
     });
-    console.log(conversation);
 }
 
 let getAllMessagesForConv = async (req, res, next) => {
@@ -47,7 +46,7 @@ let getAllMessagesForConv = async (req, res, next) => {
         await newConverstation.save();
     }
     res.status(200).json(
-        { messages: conversation.messages }
+        { messages: conversation?.messages }
     );
 }
 

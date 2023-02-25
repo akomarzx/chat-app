@@ -38,7 +38,6 @@ module.exports.onConnection = () => {
 
         socket.on('sent message', async (data) => {
             await rabbitMq.rabbit.sendNewMessage(data);
-            console.log(data);
             socket.to(data.id).emit('recieve message', { message: data.message, sender: data.sender })
         })
     })
